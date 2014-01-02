@@ -1,0 +1,174 @@
+{# This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/. #}
+
+{% extends "/firefox/base.html" %}
+
+{% add_lang_files "australis-update" %}
+
+{% block extra_meta %}<meta name="robots" content="noindex">{% endblock %}
+
+{% block page_title_prefix %}{% endblock %}
+{% block page_title %}{{ _('Welcome to the new Firefox') }}{% endblock %}
+{% block page_title_suffix %}{% endblock %}
+{% block body_id %}firefox-australis-update{% endblock %}
+
+{% block site_header_nav %}{% endblock %}
+{% block site_header_logo %}{% endblock %}
+{% block body_class %}{% endblock %}
+
+{% block site_css %}
+  {{ css('firefox_australis_update') }}
+{% endblock %}
+
+{% block string_data %}
+  {# L10n: This is the label for a button that opens the tour modal dialog #}
+  data-open="{{ _('Open tour') }}"
+  {# L10n: This is the label for a button that closes the tour modal dialog #}
+  data-close="{{ _('Close tour') }}"
+  {# L10n: This is the label for a button that proceeds to the next step of the tour #}
+  data-next="{{ _('Next') }}"
+  {# L10n: This is the label for a button that starts the tour #}
+  data-start="{{ _('Learn more') }}"
+  {# L10n: This is the label for a button that delays starting the tour #}
+  data-later="{{ _('Not now') }}"
+  {# L10n: This is the title for a door-hanger menu that shows in the browser chrome #}
+  data-title="{{ _('Take the tour') }}"
+  {# L10n: This is the text for a door-hanger menu that shows in the browser chrome #}
+  data-text="{{ _('It all starts with our completely redesigned Firefox menu.') }}"
+  {# L10n: This is the text for a door-hanger menu that shows in the browser chrome #}
+  data-later-cta="{{ _('Take the tour to explore the latest design and features') }}"
+  {# L10n: This is the label that represents step one of four in the tour #}
+  data-step1="{{ _('1/4') }}"
+  {# L10n: This is the label that represents step two of four in the tour #}
+  data-step2="{{ _('2/4') }}"
+  {# L10n: This is the label that represents step three of four in the tour #}
+  data-step3="{{ _('3/4') }}"
+  {# L10n: This is the label that represents step four of four in the tour #}
+  data-step4="{{ _('4/4') }}"
+{% endblock %}
+
+{% block content %}
+<main role="main">
+  <header>
+    <h1>{{ _('Welcome to <span>the new Firefox</span>') }}</h1>
+  </header>
+  <div class="cta-wrapper">
+    <section>
+      <h2>
+        {{ _('It’s faster at what you do most, easier to use <br>than ever and made for you to make it your own.') }}
+      </h2>
+      <p>
+        {% trans %}
+        Sleek, streamlined and beautifully redesigned, our latest version is faster in ways
+        you'll actually notice. The new menu button gives you one-click access to your
+        favorite features, then gets out of your way. You can even add, move or remove
+        any feature you want. It's the most customizable browser ever made.
+        {% endtrans %}
+      </p>
+      <button class="tour-cta-btn button">{{ _('Give it a try') }}</button>
+      <img class="dropdown" src="{{ MEDIA_URL }}/img/firefox/australis/dropdown.png" width="278" height="370" alt="">
+    </section>
+  </div>
+  <div class="features-wrapper">
+    <ul>
+      <li class="addons">
+        <h3>{{ _('Add-ons') }}</h3>
+        <p>{{ _('Access them all from one place.') }}</p>
+      </li>
+      <li class="customize">
+        <h3>{{ _('Customize') }}</h3>
+        <p>{{ _('Add, move or remove any feature.') }}</p>
+      </li>
+      <li class="bookmarks">
+        <h3>{{ _('Bookmarks') }}</h3>
+        <p>{{ _('Save any site with one click.') }}</p>
+      </li>
+    </ul>
+  </div>
+</main>
+
+<div id="ui-tour" tabindex="-1" aria-expanded="false">
+  <div class="tour-inner">
+    <div id="tour-progress" class="progress-step">
+      <div class="logo"></div>
+      <span class="step"></span>
+      <div class="progress" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4">
+        <span class="indicator"></span>
+      </div>
+    </div>
+    <ul class="ui-tour-list">
+      <li class="tour-step current app-menu visible" data-step="1">
+        <div class="tour-item">
+          <h2 class="tour-menu step-target" data-target="appMenu">
+            {{ _('Faster and easier to use than ever') }}
+          </h2>
+          <div class="tour-highlight step-target" data-target="addons"></div>
+          <ul>
+            <li>{{ _('Get your favorite features in one place') }}</li>
+            <li>{{ _('Find them faster thanks to our new look') }}</li>
+            <li>{{ _('View and access all your add-ons') }}</li>
+          </ul>
+        </div>
+        {{ high_res_img('img/firefox/australis/diag-menu-bar.jpg', {'alt': _('Get your favorite features in one place'), 'width': '300', 'height': '188'}) }}
+      </li>
+      <li class="tour-step app-menu" data-step="2">
+        <div class="tour-item">
+          <h2 class="tour-menu step-target" data-target="appMenu">
+            {{ _('Made for you to make it your own') }}
+          </h2>
+          <div class="tour-highlight step-target" data-target="customize"></div>
+          <ul>
+            <li>{{ _('Customize Firefox to meet your needs') }}</li>
+            <li>{{ _('Add, move or remove any feature') }}</li>
+            <li>{{ _('Experience the Web the way you want') }}</li>
+          </ul>
+        </div>
+        {{ high_res_img('img/firefox/australis/diag-customize.jpg', {'alt': _('Add, move or remove features to customize Firefox to meet your needs'), 'width': '300', 'height': '188'}) }}
+      </li>
+      <li class="tour-step" data-step="3">
+        <div class="tour-item">
+          <h2 class="tour-highlight step-target" data-target="bookmarks">
+            {{ _('Even better bookmarks') }}
+          </h2>
+          <ul>
+            <li>{{ _('Take control with two-button bookmarking') }}</li>
+            <li>{{ _('Use the star to save sites with one click') }}</li>
+            <li>{{ _('Quickly see all your saved pages and sites') }}</li>
+          </ul>
+        </div>
+        {{ high_res_img('img/firefox/australis/diag-bookmarks.jpg', {'alt': _('Use two-button bookmarking to quickly save pages and see all your saved sites'), 'width': '300', 'height': '188'}) }}
+      </li>
+      <li class="tour-step" data-step="4">
+        <div class="tour-item">
+          <h2>
+            {{ _('Beautiful browsing starts now') }}
+          </h2>
+          <ul>
+            <li>{{ _('Sleek, streamlined and completely redesigned') }}</li>
+            <li>{{ _('Now faster at what you do most') }}</li>
+            <li>{{ _('The most customizable browser ever') }}</li>
+          </ul>
+        </div>
+        <div class="cta">
+          <button type="button" aria-controls="ui-tour">{{ _('Enjoy the web') }}</button>
+        </div>
+      </li>
+    </ul>
+    <div class="compact-title"></div>
+    <div class="tour-init tour-highlight" data-target="appMenu" data-icon="{{ MEDIA_URL }}img/firefox/australis/logo.png" data-icon-high-res="{{ MEDIA_URL }}img/firefox/australis/logo-high-res.png?2014-01"></div>
+
+    <div class="ui-tour-controls" aria-controls="ui-tour tour-content tour-progress">
+      <button class="step prev">{{ _('Previous') }}</button>
+      <button class="step next">{{ _('Next') }}</button>
+      <button class="close">{{ _('Close') }}</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block email_form %}{% endblock%}
+
+{% block js %}
+  {{ js('firefox_australis_update') }}
+{% endblock  %}

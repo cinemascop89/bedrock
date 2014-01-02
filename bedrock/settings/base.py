@@ -161,6 +161,10 @@ MINIFY_BUNDLES = {
         'firefox_all': (
             'css/firefox/all.less',
         ),
+        'firefox_australis_update': (
+            'css/firefox/australis/australis-ui-tour.less',
+            'css/firefox/australis/update.less',
+        ),
         'firefox_unsupported': (
             'css/firefox/unsupported.less',
         ),
@@ -449,6 +453,11 @@ MINIFY_BUNDLES = {
         ),
         'firefox_all': (
             'js/firefox/firefox-language-search.js',
+        ),
+        'firefox_australis_update': (
+            'js/firefox/australis/australis-uitour-lib.js',
+            'js/firefox/australis/australis-uitour.js',
+            'js/firefox/australis/update.js',
         ),
         'firefox-resp': (
             'js/libs/jquery-1.7.1.min.js',
