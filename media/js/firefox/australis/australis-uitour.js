@@ -20,7 +20,7 @@ if (typeof Mozilla == 'undefined') {
         this.tourIsAnimating = false;
 
         // timer for hightlight rotations
-        this.highlightTimer = null;
+        //this.highlightTimer = null;
 
         this.$body = $('body');
         this.$doc = $(document);
@@ -95,8 +95,9 @@ if (typeof Mozilla == 'undefined') {
         // carousel event handlers
         this.$doc.on('transitionend', '.ui-tour-list li.current', this.onTourStep.bind(this));
         $('button.step').on('click', this.onStepClick.bind(this));
-        this.$closeButton.on('click', this.compactTour.bind(this));
+        this.$closeButton.on('click', this.closeTour.bind(this));
         $('.cta button').on('click', this.closeTour.bind(this));
+        this.$mask.on('click', this.closeTour.bind(this));
 
         // prevent focusing out of mask while initially visible
         this.$doc.on('focus.ui-tour', 'body', $.proxy(function(e) {
@@ -115,15 +116,23 @@ if (typeof Mozilla == 'undefined') {
         }, this));
     };
 
+    /*
+     * Postpone the tour until later.
+     * Close the tour and display sign-post cta top right corner.
+     */
     AustralisTour.prototype.postponeTour = function () {
         this.tourIsPostponed = true;
         var $cta = $('<button class="floating-cta"></button>');
         $cta.text(window.trans('laterCta'));
         this.$body.append($cta);
         $('.floating-cta').one('click', this.restartTour.bind(this));
-        this.closeTour();
+        this.doCloseTour();
     };
 
+    /*
+     * Restarts the tour once postponed.
+     * This can be called by an in-page cta or floating signpost cta
+     */
     AustralisTour.prototype.restartTour = function (e) {
         e.preventDefault();
         var that = this;
@@ -143,6 +152,10 @@ if (typeof Mozilla == 'undefined') {
         }
     };
 
+    /*
+     * Toggles floating signpost cta visibility
+     * Needed when Tabzilla opens/closes
+     */
     AustralisTour.prototype.toggleSignPost = function () {
         var $cta = $('.floating-cta');
         if (this.tourIsPostponed) {
@@ -169,7 +182,7 @@ if (typeof Mozilla == 'undefined') {
         } else if ($current.is(':last-child')) {
             this.$nextButton.attr('disabled', 'disabled').addClass('faded');
             this.$prevButton.removeAttr('disabled').removeClass('faded');
-            this.$closeButton.attr('disabled', 'disabled').addClass('faded');
+            //this.$closeButton.attr('disabled', 'disabled').addClass('faded');
         } else {
             $('.ui-tour-controls button').removeAttr('disabled').removeClass('faded');
         }
@@ -178,16 +191,16 @@ if (typeof Mozilla == 'undefined') {
     /*
      * Highlights a series of browser UI elements in rotation
      */
-    AustralisTour.prototype.rotateHighLights = function () {
-        var targets = ['bookmarks', 'appMenu', 'selectedTabStart'];
-        var i = 0;
-        Mozilla.UITour.showHighlight('selectedTabStart');
-        clearInterval(this.highlightTimer);
-        this.highlightTimer = setInterval(function () {
-            Mozilla.UITour.showHighlight(targets[i]);
-            i = (targets.length === i) ? 0 : i + 1;
-        }, 1000);
-    };
+    // AustralisTour.prototype.rotateHighLights = function () {
+    //     var targets = ['bookmarks', 'appMenu', 'selectedTabStart'];
+    //     var i = 0;
+    //     Mozilla.UITour.showHighlight('selectedTabStart');
+    //     clearInterval(this.highlightTimer);
+    //     this.highlightTimer = setInterval(function () {
+    //         Mozilla.UITour.showHighlight(targets[i]);
+    //         i = (targets.length === i) ? 0 : i + 1;
+    //     }, 1000);
+    // };
 
     /*
      * Triggers the current step tour highlight / interaction
@@ -210,11 +223,11 @@ if (typeof Mozilla == 'undefined') {
                 Mozilla.UITour.hideMenu('appMenu');
             }
             // if we're on the last step, rotate the menu highlights
-            if ($current.is(':last-child')) {
-                this.rotateHighLights();
-            } else {
-                clearInterval(this.highlightTimer);
-            }
+            // if ($current.is(':last-child')) {
+            //     this.rotateHighLights();
+            // } else {
+            //     clearInterval(this.highlightTimer);
+            // }
 
             // update the button states
             this.updateControls();
@@ -284,20 +297,38 @@ if (typeof Mozilla == 'undefined') {
         this.$progress.find('.step').text(window.trans('step' + step));
         this.$progress.find('.progress').attr('aria-valuenow', step);
 
-        if ($current.is(':last-child')) {
-            this.rotateHighLights();
-        } else {
-            clearInterval(this.highlightTimer);
-        }
+        // if ($current.is(':last-child')) {
+        //     this.rotateHighLights();
+        // } else {
+        //     clearInterval(this.highlightTimer);
+        // }
         this.updateControls();
+    };
+
+
+    /*
+     * Determines whether tour should be minimized or closed completely
+     */
+    AustralisTour.prototype.closeTour = function () {
+        var $current = this.$tourList.find('li.current');
+
+        if (this.tourIsAnimating || !this.tourIsVisible) {
+            return;
+        }
+
+        if ($current.is(':last-child')) {
+            this.doCloseTour();
+        } else {
+            this.doCompactTour();
+        }
     };
 
     /*
      * Closes the tour completely
      * Triggered on last step or if user presses esc key
      */
-    AustralisTour.prototype.closeTour = function () {
-        clearInterval(this.highlightTimer);
+    AustralisTour.prototype.doCloseTour = function () {
+        //clearInterval(this.highlightTimer);
         Mozilla.UITour.hideHighlight();
 
         this.tourIsVisible = false;
@@ -307,10 +338,10 @@ if (typeof Mozilla == 'undefined') {
         this.$tour.removeClass('in');
         this.$mask.find('.mask-inner').addClass('out');
         this.$mask.addClass('out');
-        this.$mask.one('transitionend', this.onTourClosed.bind(this));
+        this.$mask.one('transitionend', this.onCloseTour.bind(this));
     };
 
-    AustralisTour.prototype.onTourClosed = function () {
+    AustralisTour.prototype.onCloseTour = function () {
         this.$mask.hide();
         this.$body.removeClass('noscroll');
         // unbind ui-tour focus and keyboard event listeners
@@ -322,7 +353,7 @@ if (typeof Mozilla == 'undefined') {
      * Minimize the tour to compact state
      * Called when pressing the close button mid-way through the tour
      */
-    AustralisTour.prototype.compactTour = function () {
+    AustralisTour.prototype.doCompactTour = function () {
 
         this.tourIsVisible = false;
         this.tourIsAnimating = true;
@@ -343,10 +374,10 @@ if (typeof Mozilla == 'undefined') {
 
         // fade out the mask so user can interact with the page
         this.$mask.addClass('out');
-        this.$mask.one('transitionend', this.onTourCompact.bind(this));
+        this.$mask.one('transitionend', this.onCompactTour.bind(this));
     };
 
-    AustralisTour.prototype.onTourCompact = function (e) {
+    AustralisTour.prototype.onCompactTour = function (e) {
         var title;
         if (e.originalEvent.propertyName === 'opacity') {
             title = this.$tourList.find('li.current h2').text();
@@ -414,11 +445,7 @@ if (typeof Mozilla == 'undefined') {
             switch (e.keyCode) {
             // esc minimizes the tour
             case 27:
-                if ($current.is(':last-child')) {
-                    this.closeTour();
-                } else {
-                    this.compactTour();
-                }
+                this.closeTour();
                 break;
             // left arrow key to previous step
             case 37:
@@ -485,7 +512,7 @@ if (typeof Mozilla == 'undefined') {
 
         // if tab is hidden then hide all the UITour things.
         if (document.hidden) {
-            clearInterval(this.highlightTimer);
+            //clearInterval(this.highlightTimer);
             Mozilla.UITour.hideHighlight();
             Mozilla.UITour.hideInfo();
             Mozilla.UITour.hideMenu('appMenu');
@@ -495,9 +522,9 @@ if (typeof Mozilla == 'undefined') {
                 $current.find('.step-target').delay(100).trigger('tour-step');
                 this.$progress.find('.step').text(window.trans('step' + step));
                 this.$progress.find('.progress').attr('aria-valuenow', step);
-                if ($current.is(':last-child')) {
-                    this.rotateHighLights();
-                }
+                // if ($current.is(':last-child')) {
+                //     this.rotateHighLights();
+                // }
             } else if (!this.tourHasStarted && !this.tourIsPostponed && !this.tourHasFinished) {
                 // if tab is visible and tour has not yet started, show the door hanger.
                 $('.tour-init').trigger('tour-step');
