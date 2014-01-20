@@ -145,11 +145,11 @@ if (typeof Mozilla == 'undefined') {
         });
     };
 
-    Mozilla.UITour.hideMenu = function(name) {
-        _sendEvent('hideMenu', {
-            name: name
-        });
-    };
+        Mozilla.UITour.hideMenu = function(name) {
+                _sendEvent('hideMenu', {
+                        name: name
+                });
+        };
 
     Mozilla.UITour.startUrlbarCapture = function(text, url) {
         _sendEvent('startUrlbarCapture', {
@@ -162,4 +162,10 @@ if (typeof Mozilla == 'undefined') {
         _sendEvent('endUrlbarCapture');
     };
 
+    Mozilla.UITour.getSyncConfiguration = function(callback) {
+        _sendEvent('getConfiguration', {
+            callbackID: _waitForCallback(callback),
+            configuration: "sync",
+        });
+    };
 })();
