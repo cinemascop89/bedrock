@@ -65,6 +65,8 @@ urlpatterns = patterns('',
     # This dummy page definition makes it possible to link to /firefox/ (Bug 878068)
     url('^firefox/$', views.fx_home_redirect, name='firefox'),
 
+    page('firefox/os/prelaunch', 'firefox/os/prelaunch.html'),
+
     page('firefox/os', 'firefox/os/index.html'),
     page('firefox/os/releases', 'firefox/os/releases.html'),
 

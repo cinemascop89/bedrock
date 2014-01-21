@@ -234,6 +234,12 @@ MINIFY_BUNDLES = {
         'firefox_organizations': (
             'css/firefox/organizations.less',
         ),
+        'firefox_os_prelaunch': (
+            'css/firefox/os/prelaunch.less',
+        ),
+        'firefox_os_prelaunch_ie9': (
+            'css/firefox/os/prelaunch-ie9.less',
+        ),
         'firefox_os': (
             'css/base/mozilla-modal.less',
             'css/libs/jquery.pageslide.css',
@@ -502,6 +508,10 @@ MINIFY_BUNDLES = {
             'js/libs/socialshare.min.js',
             'js/libs/modernizr.custom.csstransitions.js',
             'js/firefox/new.js',
+        ),
+        'firefox_os_prelaunch': (
+            'js/libs/script.js',
+            'js/firefox/os/prelaunch.js',
         ),
         'firefox_os': (
             'js/base/mozilla-input-placeholder.js',
