@@ -8,7 +8,7 @@ describe("global.js", function() {
 
   describe("init_download_links", function () {
 
-    /* Append an HTML fixture to the document body 
+    /* Append an HTML fixture to the document body
      * for each test in the scope of this suite */
     beforeEach(function () {
       $('<div class="download-button"><ul class="download-list">'
@@ -16,6 +16,7 @@ describe("global.js", function() {
         + '<small class="download-other"><a href="/en-US/firefox/all" data-type="all">Systems &amp; Languages</a></small>'
         + '</div>').appendTo('body');
 
+      window.site = {};
       track_and_popup = sinon.stub();
       track_and_redirect = sinon.stub();
       init_download_links();
@@ -25,7 +26,7 @@ describe("global.js", function() {
     afterEach(function() {
       $('.download-button').remove();
 
-      window.site.isIE = false;
+      delete window.site;
     });
 
     it("should call track_and_popup when a download button is clicked on IE", function () {

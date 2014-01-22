@@ -53,16 +53,15 @@ function init_download_links() {
     });
 
     $('#direct-download-link').on('click', function(event) {
-        // A triggered event is an auto-download that should be already
-        // logged when the download button is clicked. So here, we only have to
-        // log a manual download.
-        if (event.originalEvent === undefined) {
-            window.location = this.href;
-        } else {
-            track_and_redirect(event,
-                ['_trackEvent', 'Firefox Downloads', 'click', channels[$(this).data('channel')]],
-                this.href);
-        }
+        var cmd = [
+            '_trackEvent',
+            'Firefox Downloads',
+            // Detect if the download is triggered manually or automatically
+            (event.originalEvent) ? 'click' : 'auto',
+            channels[$(this).data('channel')]
+        ];
+
+        track_and_redirect(event, cmd, this.href);
     });
 
     $('.download-list').attr('role', 'presentation');
